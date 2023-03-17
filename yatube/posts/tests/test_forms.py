@@ -71,7 +71,7 @@ class PostFormTests(TestCase):
             response,
             reverse('posts:post_detail', kwargs={'post_id': post.id})
         )
-        
+
         post = Post.objects.first()
 
         self.assertEqual(response.status_code, HTTPStatus.OK)
