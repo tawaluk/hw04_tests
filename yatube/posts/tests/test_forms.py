@@ -43,7 +43,7 @@ class PostFormTests(TestCase):
                 kwargs={'username': self.post_author.username})
         )
         self.assertEqual(Post.objects.count(), posts_count + 1)
-        post = Post.objects.latest('id')
+        post = Post.objects.first()
         self.assertEqual(post.text, form_data['text'])
         self.assertEqual(post.author, self.post_author)
         self.assertEqual(post.group_id, form_data['group'])
@@ -55,6 +55,7 @@ class PostFormTests(TestCase):
             author=self.post_author,
             group=self.group,
         )
+
         form_data = {
             'text': 'Отредактированный текст поста',
             'group': self.group.id,
@@ -70,8 +71,10 @@ class PostFormTests(TestCase):
             response,
             reverse('posts:post_detail', kwargs={'post_id': post.id})
         )
+        
+        post = Post.objects.first()
+
         self.assertEqual(response.status_code, HTTPStatus.OK)
-        post = Post.objects.latest('id')
         self.assertEqual(post.text, form_data['text'])
         self.assertEqual(post.author, self.post_author)
         self.assertEqual(post.group_id, form_data['group'])
