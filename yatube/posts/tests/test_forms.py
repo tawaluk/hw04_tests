@@ -73,7 +73,7 @@ class PostFormTests(TestCase):
         )
 
         post_new = Post.objects.get(id=post.id)
-        
+
         self.assertEqual(response.status_code, HTTPStatus.OK)
         self.assertEqual(post_new.text, form_data['text'])
         self.assertEqual(post_new.author, self.post_author)
