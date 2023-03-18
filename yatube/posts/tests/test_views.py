@@ -93,8 +93,6 @@ class PaginatorTest(TestCase):
     def setUpClass(cls):
         super().setUpClass()
 
-        NUMBER_OF_TEST_POSTS = 15  # Число тестовых постов
-
         list_of_posts: Post = []
 
         cls.guest_client = Client()
@@ -109,7 +107,7 @@ class PaginatorTest(TestCase):
             description='Тестовое описание',
         )
 
-        for _ in range(NUMBER_OF_TEST_POSTS):
+        for _ in range(settings.NUMBER_OF_TEST_POSTS):
             list_of_posts.append(
                 Post(
                     text='Один из многих',
@@ -126,17 +124,21 @@ class PaginatorTest(TestCase):
         profile_page = '/profile/HasNoName/'
         index_page = '/'
 
-        second_page = '?page=2'
+        NUM_LOST_PAGES = (
+            settings.NUMBER_OF_TEST_POSTS // settings.NUM_OF_POSTS
+        ) + 1  # Номер последней страницы
 
-        POSTS_NUMBER_ON_SECOND_PAGE: int = 5  # Число постов на 2 странице
+        lost_page = f'?page={NUM_LOST_PAGES}'
+
+        POSTS_LOST = settings.NUMBER_OF_TEST_POSTS % settings.NUM_OF_POSTS
 
         page_expected_posts = {
             group_page: settings.NUM_OF_POSTS,
             profile_page: settings.NUM_OF_POSTS,
             index_page: settings.NUM_OF_POSTS,
-            group_page + second_page: POSTS_NUMBER_ON_SECOND_PAGE,
-            profile_page + second_page: POSTS_NUMBER_ON_SECOND_PAGE,
-            index_page + second_page: POSTS_NUMBER_ON_SECOND_PAGE
+            group_page + lost_page: POSTS_LOST,
+            profile_page + lost_page: POSTS_LOST,
+            index_page + lost_page: POSTS_LOST
         }
 
         for page, expected_number_of_posts in page_expected_posts.items():

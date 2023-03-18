@@ -93,6 +93,7 @@ LOGIN_REDIRECT_URL = 'posts:index'
 EMAIL_BACKEND = 'django.core.mail.backends.filebased.EmailBackend'
 EMAIL_FILE_PATH = os.path.join(BASE_DIR, 'sent_emails')
 
-NUM_OF_POSTS = 100  # Выборка по N-постов
+NUM_OF_POSTS: int = 10  # Выборка по N-постов на странице
+NUMBER_OF_TEST_POSTS: int = 101  # Колличество тестовых постов
 
 BATCH_SIZE = 100
