@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 
 {% load static %}
+{% load thumbnail %}
 
 <html lang="ru">
   <head>    
@@ -32,6 +33,11 @@
         background: rgba(255, 255, 255, 0.9);
         padding: 15px;
       }
+      .image-content img {
+        width: 50%;
+        height: auto;
+      }
+
     </style>
   </head>
   <body>
@@ -43,7 +49,7 @@
         Контент не подвезли
       {% endblock %}
     </main>      
-    <footer class="border-top text-center py-3", 
+    <footer class="border-top text-center py-3"
       style="background-color: DodgerBlue"> 
       {% include "includes/footer.html" %}   
     </footer>

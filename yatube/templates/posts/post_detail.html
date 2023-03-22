@@ -1,6 +1,7 @@
 {% extends "base.html" %}
+{% load thumbnail %}
 
-{% block title %}Пост{{ post|truncatechars:30 }}{% endblock %}
+{% block title %}Пост {{ post|truncatechars:30 }}{% endblock %}
 
 {% block content %}
   <div class="row">
@@ -31,8 +32,13 @@
         </li>
       </ul>
     </aside>
-    <article class="col-12 col-md-9";>
+    <article class="col-12 col-md-9">
       <div class="post-in-post-detail">
+        <div class="image-content">
+          {% thumbnail post.image "400x400" crop="center" upscale=True as im %}
+            <img class="card-img my-2" src="{{ im.url }}">
+          {% endthumbnail %}
+        </div>
         <p>{{ post }}</p>
       </div>
       {% if post.author == user %}
