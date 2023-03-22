@@ -35,9 +35,11 @@
     <article class="col-12 col-md-9">
       <div class="post-in-post-detail">
         <div class="image-content">
+          <center>
           {% thumbnail post.image "400x400" crop="center" upscale=True as im %}
             <img class="card-img my-2" src="{{ im.url }}">
           {% endthumbnail %}
+          </center>
         </div>
         <p>{{ post }}</p>
       </div>
