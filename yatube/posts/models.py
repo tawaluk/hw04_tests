@@ -54,15 +54,52 @@ class Post(models.Model):
     )
 
     image = models.ImageField(
-        'Картинка',
+        verbose_name='Изображение',
         upload_to='posts/',
         blank=True,
+    )
+
+    def __str__(self):
+        return self.text[:1000]
+
+    class Meta:
+        ordering = ['-pub_date']
+        verbose_name_plural = 'Посты'
+        verbose_name = 'Пост'
+
+
+class Comment(models.Model):
+    post = models.ForeignKey(
+        Post,
+        related_name='comments',
+        verbose_name='Пост',
+        on_delete=models.CASCADE,
+    )
+
+    author = models.ForeignKey(
+        User,
+        related_name='comments',
+        verbose_name='Автор',
+        on_delete=models.CASCADE,
+    )
+
+    text = models.TextField(
+        verbose_name='Комментарий',
+    )
+
+    data_created = models.DateTimeField(
+        auto_now=True,
+        verbose_name='Дата создания',
+    )
+
+    data_updated = models.DateTimeField(
+        auto_now=True,
+        verbose_name='Дата обновления',
     )
 
     def __str__(self):
         return self.text[:100]
 
     class Meta:
-        ordering = ['-pub_date']
-        verbose_name_plural = 'Посты'
-        verbose_name = 'Пост'
+        ordering = ['-data_created']
+        verbose_name = 'Комментарий'

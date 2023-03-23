@@ -3,8 +3,8 @@ from django.core.paginator import Paginator
 from django.conf import settings
 from django.shortcuts import get_object_or_404, redirect, render
 
-from .forms import PostForm
-from .models import Group, Post, User
+from .forms import CommentForm, PostForm
+from .models import Comment, Group, Post, User
 
 
 def addition_paginator(queryset, request):
@@ -49,8 +49,14 @@ def profile(request, username):
 def post_detail(request, post_id):
     # Подробная информация о посте
     post = get_object_or_404(Post, id=post_id)
+    form = CommentForm(request.POST or None)
+    comments = Comment.objects.filter(post=post)
+    context = {
+        'post': post,
+        'form': form,
+        'comments': comments,
+    }
     template = 'posts/post_detail.html'
-    context = {'post': post}
     return render(request, template, context)
 
 
@@ -88,3 +94,22 @@ def post_edit(request, post_id):
     template = 'posts/create_post.html'
     context = {'form': form, 'is_edit': True}
     return render(request, template, context)
+
+@login_required
+def add_comment(request, post_id):
+    post = get_object_or_404(Post, id=post_id)
+    form = CommentForm(request.POST or None)
+    comments = Comment.objects.filter(post=post)
+    if form.is_valid():
+        comment = form.save(commit=False)
+        comment.author = request.user
+        comment.post = post
+        comment.save()
+        return redirect('posts:post_detail', post_id=post_id)
+
+    context = {
+        'post': post,
+        'form': form,
+        'comments': comments,
+    }
+    return render(request, 'posts:post_detail', context)
