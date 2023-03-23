@@ -3,6 +3,7 @@ from django.core.paginator import Paginator
 from django.conf import settings
 from django.shortcuts import get_object_or_404, redirect, render
 
+
 from .forms import CommentForm, PostForm
 from .models import Comment, Group, Post, User
 

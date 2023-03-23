@@ -1,5 +1,6 @@
 {% extends "base.html" %}
 {% load thumbnail %}
+{% load cache %}
 
 {% block title %}
   Главная страница
@@ -9,6 +10,7 @@
   <div class="container py-5">
     <div class="content-info">
       <h1><center>Последние обновления на сайте</center></h1>
+      {% cache 20 index_page %}
       {% for post in page_obj %}
         <ul>
           <li>
@@ -36,6 +38,7 @@
         {% endif %}
         {% if not forloop.last %}<hr>{% endif %}
       {% endfor %}
+      {% endcache %}
       {% include 'includes/paginator.html' %}
     </div>
     </div>
