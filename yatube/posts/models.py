@@ -103,3 +103,18 @@ class Comment(models.Model):
     class Meta:
         ordering = ['-data_created']
         verbose_name = 'Комментарий'
+
+
+class Follow(models.Model):
+    # пользователь, который подписывается
+    user = models.ForeignKey(
+        User,
+        related_name='follower',
+        on_delete=None
+    )
+    # пользователь, на которого подписывются
+    author = models.ForeignKey(
+        User,
+        related_name='following',
+        on_delete=models.CASCADE
+    )

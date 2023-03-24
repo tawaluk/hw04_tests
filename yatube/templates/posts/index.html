@@ -11,6 +11,7 @@
     <div class="content-info">
       <h1><center>Последние обновления на сайте</center></h1>
       {% cache 20 index_page %}
+      {% include 'includes/switcher.html' %}
       {% for post in page_obj %}
         <ul>
           <li>
