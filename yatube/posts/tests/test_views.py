@@ -3,6 +3,7 @@ from django import forms
 from django.test import Client, TestCase
 from django.urls import reverse
 from django.conf import settings
+from django.core.files.uploadedfile import SimpleUploadedFile
 
 
 from ..models import Group, Post, User
@@ -18,10 +19,26 @@ class PostPagesTests(TestCase):
             slug='test-slug',
             description='Тестовое описание группы',
         )
+
+        small_gif = (
+            b'\x47\x49\x46\x38\x39\x61\x02\x00'
+            b'\x01\x00\x80\x00\x00\x00\x00\x00'
+            b'\xFF\xFF\xFF\x21\xF9\x04\x00\x00'
+            b'\x00\x00\x00\x2C\x00\x00\x00\x00'
+            b'\x02\x00\x01\x00\x00\x02\x02\x0C'
+            b'\x0A\x00\x3B'
+        )
+        uploaded = SimpleUploadedFile(
+            name='small.gif',
+            content=small_gif,
+            content_type='image/gif'
+        )
+
         cls.post = Post.objects.create(
             text='Тестовый текст поста',
             author=cls.user,
             group=cls.group,
+            image=uploaded,
         )
 
         cls.ROOT_REVERSE = reverse('posts:index')
@@ -47,6 +64,7 @@ class PostPagesTests(TestCase):
         self.assertEqual(post.text, self.post.text)
         self.assertEqual(post.author, self.post.author)
         self.assertEqual(post.group.id, self.post.group.id)
+        self.assertEqual(post.image, self.post.image)
 
     def test_forms_show_correct(self):
         """Проверка коректности формы."""
@@ -63,6 +81,9 @@ class PostPagesTests(TestCase):
                 self.assertIsInstance(
                     response.context['form'].fields['group'],
                     forms.fields.ChoiceField)
+                self.assertIsInstance(
+                    response.context['form'].fields['image'],
+                    forms.fields.ImageField)
 
     def test_index_page_show_correct_context(self):
         """Шаблон index.html сформирован с правильным контекстом."""

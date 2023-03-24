@@ -1,4 +1,5 @@
 {% extends 'base.html' %}
+{% load thumbnail %}
 
 {% block title %}
  {{ author.get_full_name }}
@@ -22,6 +23,13 @@
               Дата публикации: {{ post.pub_date|date:'d E Y' }}
             </li>
         </ul>
+        <div class="image-content">
+          <center>
+          {% thumbnail post.image "400x400" crop="center" upscale=True as im %}
+            <img class="card-img my-2" src="{{ im.url }}">
+          {% endthumbnail %}
+          </center>
+        </div>
         <p>{{ post.text }}</p>
         <a href="{% url 'posts:post_detail' post.id %}">подробная информация</a>
         <br>

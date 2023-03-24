@@ -18,6 +18,26 @@ class PostFormTests(TestCase):
             slug='test_slug',
             description='Тестовое описание группы',
         )
+        cls.post = Post.objects.create(
+            text='Текст поста',
+            author=cls.post_author,
+            group=cls.group,
+        )
+
+        cls.POST_CREATE = reverse('posts:create')
+        cls.POST_PROFILE = reverse(
+            'posts:profile',
+            kwargs={'username': cls.post_author.username}
+        )
+        cls.POST_EDIT = reverse(
+            'posts:edit',
+            kwargs={'post_id': cls.post.id}
+        )
+        cls.POST_DETAIL = reverse(
+            'posts:post_detail',
+            kwargs={'post_id': cls.post.id}
+        )
+        cls.LOGIN = reverse('login')
 
     def setUp(self):
         self.guest_user = Client()
@@ -32,16 +52,11 @@ class PostFormTests(TestCase):
             'group': self.group.id,
         }
         response = self.authorized_user.post(
-            reverse('posts:create'),
+            self.POST_CREATE,
             data=form_data,
             follow=True
         )
-        self.assertRedirects(
-            response,
-            reverse(
-                'posts:profile',
-                kwargs={'username': self.post_author.username})
-        )
+        self.assertRedirects(response, self.POST_PROFILE)
         self.assertEqual(Post.objects.count(), posts_count + 1)
         post = Post.objects.first()
         self.assertEqual(post.text, form_data['text'])
@@ -50,30 +65,17 @@ class PostFormTests(TestCase):
 
     def test_authorized_user_edit_post(self):
         """Проверить редактирование записи авторизированным клиентом."""
-        post = Post.objects.create(
-            text='Текст поста для редактирования',
-            author=self.post_author,
-            group=self.group,
-        )
-
         form_data = {
             'text': 'Отредактированный текст поста',
             'group': self.group.id,
         }
         response = self.authorized_user.post(
-            reverse(
-                'posts:edit',
-                args=[post.id]),
+            self.POST_EDIT,
             data=form_data,
             follow=True
         )
-        self.assertRedirects(
-            response,
-            reverse('posts:post_detail', kwargs={'post_id': post.id})
-        )
-
-        post_new = Post.objects.get(id=post.id)
-
+        self.assertRedirects(response, self.POST_DETAIL)
+        post_new = Post.objects.get(id=self.post.id)
         self.assertEqual(response.status_code, HTTPStatus.OK)
         self.assertEqual(post_new.text, form_data['text'])
         self.assertEqual(post_new.author, self.post_author)
@@ -87,11 +89,11 @@ class PostFormTests(TestCase):
             'group': self.group.id,
         }
         response = self.guest_user.post(
-            reverse('posts:create'),
+            self.POST_CREATE,
             data=form_data,
             follow=True
         )
         self.assertEqual(response.status_code, HTTPStatus.OK)
-        redirect = reverse('login') + '?next=' + reverse('posts:create')
+        redirect = self.LOGIN + '?next=' + self.POST_CREATE
         self.assertRedirects(response, redirect)
         self.assertEqual(Post.objects.count(), posts_count)

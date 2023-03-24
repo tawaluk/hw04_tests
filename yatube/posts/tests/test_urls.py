@@ -3,7 +3,7 @@ from http import HTTPStatus
 from django.contrib.auth import get_user_model
 from django.test import TestCase, Client
 
-from posts.models import Group, Post
+from ..models import Group, Post
 
 User = get_user_model()
 
@@ -129,3 +129,10 @@ class PostURLTests(TestCase):
             with self.subTest(address=address):
                 response = self.authorized_user.get(address)
                 self.assertTemplateUsed(response, template)
+
+
+class ViewTestClass(TestCase):
+    def test_error_page(self):
+        response = self.client.get('/Justic/')
+        self.assertEqual(response.status_code, 404)
+        self.assertTemplateUsed(response, 'core/404.html')

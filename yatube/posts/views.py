@@ -101,6 +101,7 @@ def post_edit(request, post_id):
     context = {'form': form, 'is_edit': True}
     return render(request, template, context)
 
+
 @login_required
 def add_comment(request, post_id):
     # Добавление комментария
@@ -120,6 +121,7 @@ def add_comment(request, post_id):
         'comments': comments,
     }
     return render(request, 'posts:post_detail', context)
+
 
 @login_required
 def follow_index(request):

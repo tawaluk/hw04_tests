@@ -2,7 +2,7 @@ import os
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = 'gk*0y3%!c_(8%hdfvw!d*ll7rd)!y^ez4htx%$=hudxx-gqf*1'
-DEBUG = True
+DEBUG = False
 
 ALLOWED_HOSTS = [
     'localhost',
@@ -107,3 +107,5 @@ NUM_OF_POSTS: int = 10  # Выборка по N-постов на страниц
 NUMBER_OF_TEST_POSTS: int = 101  # Колличество тестовых постов
 
 BATCH_SIZE = 100
+
+CSRF_FAILURE_VIEW = 'core.views.csrf_failure'

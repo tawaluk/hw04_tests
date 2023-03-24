@@ -22,7 +22,7 @@ class CommentTests(TestCase):
 
     def test_authorized_client_comment(self):
         """Проверить возможность комментирования пользователем"""
-        text_comment = 'Тестовый комментарий'
+        text_comment = 'Комментарий'
         self.authorized_user.post(
             CommentTests.comment_url,
             data={'text': text_comment}
