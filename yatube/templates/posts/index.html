@@ -10,7 +10,9 @@
   <div class="container py-5">
     <div class="content-info">
       <h1><center>Последние обновления на сайте</center></h1>
-      {% cache 20 index_page %}
+
+      {% cache 20 index_page page_obj.number %}
+
       {% include 'includes/switcher.html' %}
       {% for post in page_obj %}
         <ul>
@@ -38,7 +40,9 @@
           </p>
         {% endif %}
         {% if not forloop.last %}<hr>{% endif %}
+
       {% endfor %}
+
       {% endcache %}
       {% include 'includes/paginator.html' %}
     </div>
